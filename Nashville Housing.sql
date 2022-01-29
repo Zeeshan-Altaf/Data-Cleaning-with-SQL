@@ -21,17 +21,17 @@ SET    SaleDateConverted = CONVERT(Date, SaleDate)
 -- 2.
 -- Populate property adress data
 
-SELECT *
-FROM   nashvillehousing
+SELECT    *
+FROM      nashvillehousing
 --WHERE  PropertyAddress IS NULL
 ORDER BY  ParcelID
 
 
 SELECT a.parcelID,
        a.propertyAddress,
-	   b.parcelID,
-	   b.propertyAddress,
-	   ISNULL (a.propertyAddress, b.propertyAddress)
+       b.parcelID,
+       b.propertyAddress,
+       ISNULL (a.propertyAddress, b.propertyAddress)
 FROM   nashvillehousing a
 jOIN   nashvillehousing b ON  a.ParcelID = b.parcelID
                           AND a.UniqueID <> b.UniqueID
@@ -53,7 +53,7 @@ FROM   nashvillehousing
 
 SELECT PropertyAddress,
        SUBSTRING (PropertyAddress, 1, CHARINDEX (',', PropertyAddress) -1) AS Address,
-	   SUBSTRING (PropertyAddress, CHARINDEX (',', PropertyAddress) +1, LEN (PropertyAddress)) AS City
+       SUBSTRING (PropertyAddress, CHARINDEX (',', PropertyAddress) +1, LEN (PropertyAddress)) AS City
 FROM   nashvillehousing
 
 
@@ -81,8 +81,8 @@ FROM   nashvillehousing
 
 SELECT OwnerAddress,
        PARSENAME (REPLACE(OwnerAddress, ',', '.'), 3),
-	   PARSENAME (REPLACE(OwnerAddress, ',', '.'), 2),
-	   PARSENAME (REPLACE(OwnerAddress, ',', '.'), 1)
+       PARSENAME (REPLACE(OwnerAddress, ',', '.'), 2),
+       PARSENAME (REPLACE(OwnerAddress, ',', '.'), 1)
 FROM   nashvillehousing
 
 
@@ -121,16 +121,16 @@ ORDER BY COUNT (SoldAsVacant)
 
 SELECT SoldAsVacant,
        CASE WHEN SoldAsVacant = 'Y' THEN 'Yes'
-	        WHEN SoldAsVacant = 'N' THEN 'No'
-			ELSE SoldAsVacant
-	   END
+	    WHEN SoldAsVacant = 'N' THEN 'No'
+	    ELSE SoldAsVacant
+       END
 FROM   nashvillehousing
 
 UPDATE nashvillehousing
 SET    SoldAsVacant = CASE WHEN SoldAsVacant = 'Y' THEN 'Yes'
-	                       WHEN SoldAsVacant = 'N' THEN 'No'
-			               ELSE SoldAsVacant
-	                  END
+	                   WHEN SoldAsVacant = 'N' THEN 'No'
+			   ELSE SoldAsVacant
+	              END
 
 
 -- 5.
@@ -140,11 +140,11 @@ WITH RowNumCTE AS
 (
 SELECT *,
        ROW_NUMBER () OVER (PARTITION BY ParcelID,
-	                                    PropertyAddress,
-								 		SaleDate,
-								  		SalePrice,
-								  	    LegalReference
-							ORDER BY    ParcelID) row_num
+	                                PropertyAddress,
+					SaleDate,
+					SalePrice,
+					LegalReference
+			   ORDER BY     ParcelID) row_num
 FROM   nashvillehousing
 )
 
@@ -163,5 +163,5 @@ FROM   nashvillehousing
 ALTER TABLE nashvillehousing
 DROP COLUMN SaleDate,
             PropertyAddress,
-			OwnerAddress,
-			TaxDistrict
+	    OwnerAddress,
+	    TaxDistrict
